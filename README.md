@@ -15,7 +15,6 @@ Dependencies:
 - diffeqpy (optional) – pip install diffeqpy
 
 The code can be easily modified to avoid dependencies on Numba and Numdifftools. 
-Notice that for Numba this will slow down a few routines in PRyM thermo.py which involve SciPy integration.
 The optional dependencies above require:
 - the Julia programming language, https://julialang.org
 - the open-source software for scientific machine learning, https://sciml.ai
