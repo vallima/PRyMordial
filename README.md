@@ -1,18 +1,18 @@
 # PRyMordial
-A Python package for precise computations of BBN within and beyond the Standard Model.
 ======================================================================================
+A Python package for precise computations of BBN within and beyond the Standard Model.
 
-[PRyM.pdf](https://github.com/vallima/PRyMordial/files/11711841/PRyM.pdf)
+[PRyM in a Nutshell](https://github.com/vallima/PRyMordial/files/11711841/PRyM.pdf)
 
 Dependencies:
 -------------
-• NumPy (mandatory) – pip install numpy;
-• SciPy (mandatory) – pip install scipy;
-• Vegas (mandatory) – pip install vegas;
-• Numba (recommended) – pip install numba;
-• Numdifftools (recommended) – pip install numdifftools; 
-• PyJulia (optional) – pip install julia;
-• diffeqpy (optional) – pip install diffeqpy.
+- NumPy (mandatory) – pip install numpy
+- SciPy (mandatory) – pip install scipy
+- Vegas (mandatory) – pip install vegas
+- Numba (recommended) – pip install numba
+- Numdifftools (recommended) – pip install numdifftools
+- PyJulia (optional) – pip install julia
+- diffeqpy (optional) – pip install diffeqpy
 
 The code can be easily modified to avoid dependencies on Numba and Numdifftools. 
 Notice that for Numba this will slow down a few routines in PRyM thermo.py which involve SciPy integration.
