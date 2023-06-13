@@ -4,7 +4,6 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import interp1d
 from scipy.special import zeta
-import numdifftools as nd
 
 def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
 
@@ -227,7 +226,13 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
         def sbar(T):
             return PRyMthermo.spl(T)/T**3
         # Numerical derivative of the above wrt to temperature
-        dsbardT = nd.Derivative(sbar,n=1)
+        if(PRyMini.numdiff_flag):
+            from numdifftools import Derivative
+            dsbardT = Derivative(sbar,n=1)
+        else:
+            def dsbardT(T):
+                dToT = 1.e-3
+                return (sbar((1.+dToT)*T)-sbar((1.-dToT)*T))/(2.*dToT*T)
         # dlog(a*T)/dlog(T)
         def dlnadlnT(lnT):
             T = np.exp(lnT)
