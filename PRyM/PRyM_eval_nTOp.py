@@ -3,14 +3,16 @@ import numpy as np
 from scipy.special import gamma, spence
 from scipy.integrate import quad
 from scipy.interpolate import interp1d
-import vegas
 import PRyM.PRyM_init as PRyMini
+if(PRyMini.compute_nTOp_thermal_flag):
+    import vegas
 
 exp_cutoff = 3*1.e+2 # cutoff to avoid overflow warnings
 epsrel_low = 1.e-1 # minimum precision sufficient to speed up some quad integrals
-# Settings for precision in vegas integration 
-n_eval = 20000 # recommended max number of evaluations per iteration
-n_itn = 20 # recommended number of iterations
+if(PRyMini.compute_nTOp_thermal_flag):
+    # Settings for precision in vegas integration
+    n_eval = 20000 # recommended max number of evaluations per iteration
+    n_itn = 20 # recommended number of iterations
 
 def FermiCoulomb(b):
     me = PRyMini.me*PRyMini.MeV # electron mass
@@ -150,7 +152,7 @@ def ComputeWeakRates(Tvec):
             return 0.
             
     def FD_nu_e3p1(E,phi,x):
-        if((phi<exp_cutoff) and (E*x < exp_cutoff)):
+        if((phi<exp_cutoff) and (E*x<exp_cutoff)):
             return (np.exp(phi)*E**2*(3*np.exp(phi)+np.exp(E*x)*(3.-E*x)))/(np.exp(E*x)+np.exp(phi))**2
         else:
             return 0.
@@ -292,349 +294,327 @@ def ComputeWeakRates(Tvec):
 
     # Finite-temperature Radiative Corrections
     # Brown & Sawyer for finite temperature radiative corrections + Brehmstrahlung (Eqs. 107)
-    def Chitilde(en, znu, sgnq):
-        q = Q/me
-        return FD_nu3(en-sgnq*q,sgnq*xi_nu,znu)*(en-sgnq*q)**2
-
-    def A(E, k):
-        pE = np.sqrt(E**2 - 1.)
-        return (2.*E**2 + k**2)*(np.log((E + pE)/(E - pE))) - 4.*pE*E
-        
-    def B(E):
-        pE = np.sqrt(E**2 - 1.)
-        return 2.*E*(np.log((E + pE)/(E - pE))) - 4.*pE
-
-    def IPENCCRT(E, k, x, znu, sgnq):
-        pE = np.sqrt(E**2-1.)
-        def BE(EkBT):
-            resvec = np.zeros(len(EkBT))
-            argvec = EkBT
-            my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])-1.)
-            return resvec
-        def FD2(en, xval):
-            resvec = np.zeros(len(en))
-            argvec = en*xval
-            my_index = np.where(np.abs(argvec)<=exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
-            my_index_overflow = np.where(np.abs(argvec)>exp_cutoff)[0]
-            resvec[my_index_overflow[:]] = 1./(np.exp(np.sign(argvec[my_index_overflow[:]])*exp_cutoff)+1.)
-            return resvec
-        def Chitilde(en, znuval, sgnq):
-            q = Q/me
-            resvec = np.zeros(len(en))
-            argvec = znuval*(en-sgnq*q) - (sgnq*xi_nu)
-            my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]]) + 1.)
-            return resvec*(en-sgnq*q)**2
-        return  PRyMini.alphaem/(2*np.pi)*(BE(x*k)/k)*(A(E, k)*(FD2(-E,x)*FermiStat(sgnq, 1, pE/E)*(Chitilde(E - k, znu, sgnq) + Chitilde(E + k, znu, sgnq) - 2*Chitilde(E, znu, sgnq))+ FD2(E, x)*FermiStat(sgnq, -1, pE/E)*(Chitilde(-E + k, znu, sgnq) + Chitilde(-E - k, znu, sgnq) - 2*Chitilde(-E, znu, sgnq)))-k*B(E)*(FD2(-E, x)*FermiStat(sgnq, 1, pE/E)*(Chitilde(E - k, znu, sgnq) - Chitilde(E + k, znu, sgnq))+ FD2(E, x)*FermiStat(sgnq, -1, pE/E)*(Chitilde(-E + k, znu, sgnq)- Chitilde(-E - k, znu, sgnq))))
-
-    # Bremsstrahlung corrections
-    def IPENCCRDiffBremsstrahlung(E, k, x, znu, sgnq):
-        q = Q/me
-        pE = np.sqrt(E**2-1.)
-        Fp = (2.*E**2+k**2)*(np.log((E+pE)/(E-pE)))-4.*pE*E
-        Fp += k*(2.*E*(np.log((E+pE)/(E-pE)))-4.*pE)
-        Fm = (2.*E**2+k**2)*(np.log((E+pE)/(E-pE)))-4.*pE*E
-        Fm -= k*(2.*E*(np.log((E+pE)/(E-pE)))-4.*pE)
-        def FD2(en, xval):
-            resvec = np.zeros(len(en))
-            argvec = en*xval
-            my_index = np.where(np.abs(argvec)<=exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
-            my_index_overflow = np.where(np.abs(argvec)>exp_cutoff)[0]
-            resvec[my_index_overflow[:]] = 1./(np.exp(np.sign(argvec[my_index_overflow[:]])*exp_cutoff)+1.)
-            return resvec
-        def Chitilde(en, znuval, sgnq):
-            q = Q/me
-            resvec = np.zeros(len(en))
-            argvec = znuval*(en-sgnq*q) - (sgnq*xi_nu)
-            my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]]) + 1.)
-            return resvec*(en-sgnq*q)**2
-        res_fac = PRyMini.alphaem/(2.*np.pi*k)
-        res1_fac = FD2(-E,x)*FermiStat(sgnq,1,pE/E)
-        res1vec = Fp*Chitilde(E+k,znu,sgnq)
-        argvec = k
-        my_index = np.where(np.abs(argvec)<np.abs(E-sgnq*q))[0]
-        res1vec[my_index[:]] -= Fp[my_index[:]]*FD2(E[my_index[:]]-sgnq*q,znu)* (np.abs(E[my_index[:]]-sgnq*q)-k[my_index[:]])**2
-        res1vec[:] *= res1_fac[:]
-        res2_fac = FD2(E,x)*FermiStat(sgnq,-1,pE/E)
-        res2vec = Fm*Chitilde(-E+k,znu,sgnq)
-        my_index = np.where(np.abs(argvec)<np.abs(E+sgnq*q))[0]
-        res2vec[my_index[:]] -= Fp[my_index[:]]*FD2(-E[my_index[:]]-sgnq*q,znu)*(np.abs(E[my_index[:]]+sgnq*q) -k[my_index[:]])**2
-        res2vec[:] *= res2_fac[:]
-        return res_fac*(res1vec+res2vec)
-
-    # Mass shift and ep + ee corrections, Eq. 5.15 - 5.16 Brown & Sawyer
-    def C1dE(E, x, znu, sgnq):
-        pE = np.sqrt(E**2-1.)
-        return -((PRyMini.alphaem*E)/(2.*np.pi*pE))*(2.*np.pi**2)/(3.*x**2)*(ChiFunc(E,pE,x,znu,sgnq)+ ChiFunc(-E,pE,x, znu,sgnq))
-
-    def C2dE1dE2(e1v, e2v, x, znu, sgnq):
-        resvec = np.zeros(len(e1v))
-        e1pe2 = e1v+e2v
-        e1me2 = e1v-e2v
-        min_e1pe2 = 2.+np.abs(e1me2)
-        max_e1pe2 = 2.+max(10.,15./x)+np.abs(e1me2)
-        index_limits = np.where(((e1pe2-min_e1pe2)>0)*((max_e1pe2-e1pe2)>0))[0]
-        def FD2(en, xval):
-            resvec = np.zeros(len(en))
-            argvec = en*xval
-            my_index = np.where(np.abs(argvec)<=exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
-            my_index_overflow = np.where(np.abs(argvec)>exp_cutoff)[0]
-            resvec[my_index_overflow[:]] = 1./(np.exp(np.sign(argvec[my_index_overflow[:]])*exp_cutoff)+1.)
-            return resvec
-        def D_FD2(en, xval):
-            resvec = np.zeros(len(en))
-            argvec = en*xval
-            my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
-            resvec[my_index[:]] = -xval*np.exp(argvec[my_index[:]])/(np.exp(argvec[my_index[:]])+1.)**2
-            return resvec
-        def FD_nu3(en, phi, xval):
-            resvec = np.zeros(len(en))
-            argvec = en*xval-phi
-            my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
-            resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
-            return resvec
-        def ChiFunc(E, p, x, znu, sgnq):
-            return FD_nu3(E-sgnq*(Q/me),sgnq*xi_nu,znu)*FD2(-E,x)*(E-sgnq*(Q/me))**2
-        #safe_check = np.where((np.abs(p1-p2)>0)*(np.abs(p1)>0)*(np.abs(e2)>0)*(np.abs(p2)>0) *(np.abs(e1)>0))[0]
-        e1 = e1v[index_limits[:]]
-        e2 = e2v[index_limits[:]]
-        p1 = np.sqrt(e1v[index_limits[:]]**2 - 1.)
-        p2 = np.sqrt(e2v[index_limits[:]]**2 - 1.)
-        L_fac = np.log((e1*e2+p1*p2+1.)/(e1*e2-p1*p2+1.))
-        resvec_limits = PRyMini.alphaem/(2.*np.pi)*(ChiFunc(e1,p1,x,znu,sgnq)+ChiFunc(-e1,p1,x,znu,sgnq)) *(-(1./4.)*np.log(((p1+p2)/(p1-p2))**2)*np.log(((p1+p2)/(p1-p2))**2)*(D_FD2(e2, x)*p2/p1*e1**2/e2*(e1+e2)+FD2(e2,x)*e1**2/(p1*p2)*(e2+e1/e2**2))+np.log(((p1+ p2)/(p1-p2))**2)*(D_FD2(e2,x)*(p2**2*e1/e2*(1./p1**2+2.) -e1**2*p2/p1*L_fac)+FD2(e2,x)*(e1/(p1**2*e2**2)*(e2**2+2*p1**2+1.)-(e1**2+e2**2)/(e1+e2)-(e1**2*e2)/(p1*p2)*L_fac))-FD2(e2,x) *(4.*e1*p2/p1+2.*e2*L_fac))
-        resvec[index_limits[:]] = resvec_limits[:]
-        return resvec
-
-    ##################################################################
-    ######## TruePhoton -> real photon emission processes     ########
-    ######## DiffBremsstrahlung -> bremsstrahlung corrections ########
-    ######## Thermal -> mass shift and pe+ee corrections      ########
-    ##################################################################
-        
-    def L_nTOpThermalTruePhoton_int(E, k, T):
-        x  = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return IPENCCRT(E, k, x, xnu, 1)
-        
-    def L_nTOpThermalTruePhoton(T):
-        x = me/(PRyMini.kB*T)
-        min_E = 1.001
-        max_E = max(10.,20./x)
-        min_k = 0.001
-        max_k = max(10.,20./(me/(PRyMini.kB*T)))
-        integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
-        @vegas.batchintegrand
-        def f_batch(x):
-            global store
-            E_val,k_val = np.transpose(x)
-            return {'myres': L_nTOpThermalTruePhoton_int(E_val,k_val,T)}
-        training = integ(f_batch, nitn=n_itn, neval=n_eval)
-        result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
-        return result['myres'].mean
-        
-    def L_nTOpThermalDiffBremsstrahlung_int(E, k, T):
-        x  = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return IPENCCRDiffBremsstrahlung(E, k, x, xnu, 1)
-        
-    def L_nTOpThermalDiffBremsstrahlung(T):
-        min_E = 1.001
-        max_E = max(10.,20./(me/(PRyMini.kB*T)))
-        min_k = 0.001
-        max_k = max(10.,20./(me/(PRyMini.kB*T)))
-        integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
-        @vegas.batchintegrand
-        def f_batch(x):
-            global store
-            E_val,k_val = np.transpose(x)
-            return {'myres': L_nTOpThermalDiffBremsstrahlung_int(E_val,k_val,T)}
-        training = integ(f_batch, nitn=n_itn, neval=n_eval)
-        result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
-        return result['myres'].mean
-
-    def L_nTOpThermal_1_int(E, T):
-        return C1dE(E, me/(PRyMini.kB*T), me/(PRyMini.kB*T*T_nuOverT(T)), 1)
-
-    def L_nTOpThermal_1(T):
-        return quad(L_nTOpThermal_1_int, 1., max(25., 150.*(PRyMini.kB*T)/me), args=(T), epsrel = 1.e-2)[0]
-        
-    def L_nTOpThermal_2_3_int(e1pe2, e1me2, T):
-        x  = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return 0.5*C2dE1dE2((e1pe2+e1me2)/2.,(e1pe2-e1me2)/2., x, xnu, 1)
-        
-    def L_nTOpThermal_2_3(T):
-        x = me/(PRyMini.kB*T)
-        # res_2
-        min_e1me1 = -max(10.,15./x)
-        max_e1me2 = -0.001
-        min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
-        max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
-        integ_2 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
-        @vegas.batchintegrand
-        def f_batch_2(x):
-            global store
-            e1pe2,e1me2 = np.transpose(x)
-            return {'myres': L_nTOpThermal_2_3_int(e1pe2,e1me2,T)}
-        training_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval)
-        result_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval, adapt=True)
-        res_2 = result_2['myres'].mean
-        # res_3
-        min_e1me1 = 0.001
-        max_e1me2 = max(10.,15./x)
-        min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
-        max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
-        integ_3 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
-        @vegas.batchintegrand
-        def f_batch_3(x):
-            global store
-            e1pe2,e1me2 = np.transpose(x)
-            return {'myres': L_nTOpThermal_2_3_int(e1pe2,e1me2,T)}
-        training_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval)
-        result_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval, adapt=True)
-        res_3 = result_3['myres'].mean
-        return res_2+res_3
-        
-    def L_nTOpThermal_tot(T):
-        return L_nTOpThermal_1(T)+L_nTOpThermal_2_3(T)
-
-    ####################
-    # p -> n processes #
-    ####################
-
-    # p -> n real photon corrections
-    def L_pTOnThermalTruePhoton_int_(E, k, T):
-        x = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return IPENCCRT(E, k, x, xnu, -1)
-
-    def L_pTOnThermalTruePhoton_int(k,T):
-        x = me/(PRyMini.kB*T)
-        min_int = 1.001
-        max_int = max(10., 20./x)
-        return quad(L_pTOnThermalTruePhoton_int_, min_int, max_int, args=(k,T),epsrel=1.e-1)[0]
-
-    def L_pTOnThermalTruePhoton(T):
-        x = me/(PRyMini.kB*T)
-        min_int = 0.001
-        max_int = max(10., 20./x)
-        return quad(L_pTOnThermalTruePhoton_int, min_int, max_int, args=(T),epsrel=1.e-1)[0]
-        
-    def L_pTOnThermalTruePhoton_int(E, k, T):
-        x  = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return IPENCCRT(E, k, x, xnu, -1)
-        
-    def L_pTOnThermalTruePhoton(T):
-        x = me/(PRyMini.kB*T)
-        min_E = 1.001
-        max_E = max(10.,20./x)
-        min_k = 0.001
-        max_k = max(10.,20./(me/(PRyMini.kB*T)))
-        integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
-        @vegas.batchintegrand
-        def f_batch(x):
-            global store
-            E_val,k_val = np.transpose(x)
-            return {'myres': L_pTOnThermalTruePhoton_int(E_val,k_val,T)}
-        training = integ(f_batch, nitn=n_itn, neval=n_eval)
-        result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
-        return result['myres'].mean
-        
-    # p -> n brems corrections
-    def L_pTOnThermalDiffBremsstrahlung_int(E, k, T):
-        x  = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return IPENCCRDiffBremsstrahlung(E, k, x, xnu, -1)
-        
-    def L_pTOnThermalDiffBremsstrahlung(T):
-        min_E = 1.001
-        max_E = max(10.,20./(me/(PRyMini.kB*T)))
-        min_k = 0.001
-        max_k = max(10.,20./(me/(PRyMini.kB*T)))
-        integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
-        @vegas.batchintegrand
-        def f_batch(x):
-            global store
-            E_val,k_val = np.transpose(x)
-            return {'myres': L_pTOnThermalDiffBremsstrahlung_int(E_val,k_val,T)}
-        training = integ(f_batch, nitn=n_itn, neval=n_eval)
-        result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
-        return result['myres'].mean
-        
-    # p -> n mass shift + pe+ee corrections
-    def L_pTOnThermal_1_int(E, T):
-        return C1dE(E, me/(PRyMini.kB*T), me/(PRyMini.kB*T*T_nuOverT(T)), -1)
-
-    def L_pTOnThermal_1(T):
-        return quad(L_pTOnThermal_1_int, 1., max(25., 150.*(PRyMini.kB*T)/me), args=(T), epsrel = 1.e-2)[0]
-        
-    def L_pTOnThermal_2_3_int(e1pe2, e1me2, T):
-        x  = me/(PRyMini.kB*T)
-        xnu = me/(PRyMini.kB*T*T_nuOverT(T))
-        return 0.5*C2dE1dE2((e1pe2+e1me2)/2.,(e1pe2-e1me2)/2., x, xnu, -1)
-        
-    def L_pTOnThermal_2_3(T):
-        x = me/(PRyMini.kB*T)
-        # res_2
-        min_e1me1 = -max(10.,15./x)
-        max_e1me2 = -0.001
-        min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
-        max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
-        integ_2 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
-        @vegas.batchintegrand
-        def f_batch_2(x):
-            global store
-            e1pe2,e1me2 = np.transpose(x)
-            return {'myres': L_pTOnThermal_2_3_int(e1pe2,e1me2,T)}
-        training_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval)
-        result_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval, adapt=True)
-        res_2 = result_2['myres'].mean
-        # res_3
-        min_e1me1 = 0.001
-        max_e1me2 = max(10.,15./x)
-        min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
-        max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
-        integ_3 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
-        @vegas.batchintegrand
-        def f_batch_3(x):
-            global store
-            e1pe2,e1me2 = np.transpose(x)
-            return {'myres': L_pTOnThermal_2_3_int(e1pe2,e1me2,T)}
-        training_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval)
-        result_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval, adapt=True)
-        res_3 = result_3['myres'].mean
-        return res_2+res_3
-        
-    def L_pTOnThermal_tot(T):
-        return L_pTOnThermal_1(T)+L_pTOnThermal_2_3(T)
-
-    # Gathering all thermal corrections together
-    def L_nTOpCCRTh(T):
-        L_n_p_real_photon = L_nTOpThermalTruePhoton(T)
-        L_n_p_thermal_brems = L_nTOpThermalDiffBremsstrahlung(T)
-        L_n_p_thermal_mass = L_nTOpThermal_tot(T)
-        return L_n_p_real_photon+L_n_p_thermal_brems+L_n_p_thermal_mass
-    def L_pTOnCCRTh(T):
-        T_threshold = 10**(8.2)
-        if(T< T_threshold):
-            return 0.
-        else:
-            L_p_n_real_photon = L_pTOnThermalTruePhoton(T)
-            L_p_n_thermal_brems = L_pTOnThermalDiffBremsstrahlung(T)
-            L_p_n_thermal_mass = L_pTOnThermal_tot(T)
-        return L_p_n_real_photon+L_p_n_thermal_brems+L_p_n_thermal_mass
-    
-    ################################
-    # Splining thermal corrections #
-    ################################
-    
     if(PRyMini.compute_nTOp_thermal_flag):
+        def Chitilde(en, znu, sgnq):
+            q = Q/me
+            return FD_nu3(en-sgnq*q,sgnq*xi_nu,znu)*(en-sgnq*q)**2
+
+        def A(E, k):
+            pE = np.sqrt(E**2 - 1.)
+            return (2.*E**2 + k**2)*(np.log((E + pE)/(E - pE))) - 4.*pE*E
+            
+        def B(E):
+            pE = np.sqrt(E**2 - 1.)
+            return 2.*E*(np.log((E + pE)/(E - pE))) - 4.*pE
+
+        def IPENCCRT(E, k, x, znu, sgnq):
+            pE = np.sqrt(E**2-1.)
+            def BE(EkBT):
+                resvec = np.zeros(len(EkBT))
+                argvec = EkBT
+                my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])-1.)
+                return resvec
+            def FD2(en, xval):
+                resvec = np.zeros(len(en))
+                argvec = en*xval
+                my_index = np.where(np.abs(argvec)<=exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
+                my_index_overflow = np.where(np.abs(argvec)>exp_cutoff)[0]
+                resvec[my_index_overflow[:]] = 1./(np.exp(np.sign(argvec[my_index_overflow[:]])*exp_cutoff)+1.)
+                return resvec
+            def Chitilde(en, znuval, sgnq):
+                q = Q/me
+                resvec = np.zeros(len(en))
+                argvec = znuval*(en-sgnq*q) - (sgnq*xi_nu)
+                my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]]) + 1.)
+                return resvec*(en-sgnq*q)**2
+            return  PRyMini.alphaem/(2*np.pi)*(BE(x*k)/k)*(A(E, k)*(FD2(-E,x)*FermiStat(sgnq, 1, pE/E)*(Chitilde(E - k, znu, sgnq) + Chitilde(E + k, znu, sgnq) - 2*Chitilde(E, znu, sgnq))+ FD2(E, x)*FermiStat(sgnq, -1, pE/E)*(Chitilde(-E + k, znu, sgnq) + Chitilde(-E - k, znu, sgnq) - 2*Chitilde(-E, znu, sgnq)))-k*B(E)*(FD2(-E, x)*FermiStat(sgnq, 1, pE/E)*(Chitilde(E - k, znu, sgnq) - Chitilde(E + k, znu, sgnq))+ FD2(E, x)*FermiStat(sgnq, -1, pE/E)*(Chitilde(-E + k, znu, sgnq)- Chitilde(-E - k, znu, sgnq))))
+
+        # Bremsstrahlung corrections
+        def IPENCCRDiffBremsstrahlung(E, k, x, znu, sgnq):
+            q = Q/me
+            pE = np.sqrt(E**2-1.)
+            Fp = (2.*E**2+k**2)*(np.log((E+pE)/(E-pE)))-4.*pE*E
+            Fp += k*(2.*E*(np.log((E+pE)/(E-pE)))-4.*pE)
+            Fm = (2.*E**2+k**2)*(np.log((E+pE)/(E-pE)))-4.*pE*E
+            Fm -= k*(2.*E*(np.log((E+pE)/(E-pE)))-4.*pE)
+            def FD2(en, xval):
+                resvec = np.zeros(len(en))
+                argvec = en*xval
+                my_index = np.where(np.abs(argvec)<=exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
+                my_index_overflow = np.where(np.abs(argvec)>exp_cutoff)[0]
+                resvec[my_index_overflow[:]] = 1./(np.exp(np.sign(argvec[my_index_overflow[:]])*exp_cutoff)+1.)
+                return resvec
+            def Chitilde(en, znuval, sgnq):
+                q = Q/me
+                resvec = np.zeros(len(en))
+                argvec = znuval*(en-sgnq*q) - (sgnq*xi_nu)
+                my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]]) + 1.)
+                return resvec*(en-sgnq*q)**2
+            res_fac = PRyMini.alphaem/(2.*np.pi*k)
+            res1_fac = FD2(-E,x)*FermiStat(sgnq,1,pE/E)
+            res1vec = Fp*Chitilde(E+k,znu,sgnq)
+            argvec = k
+            my_index = np.where(np.abs(argvec)<np.abs(E-sgnq*q))[0]
+            res1vec[my_index[:]] -= Fp[my_index[:]]*FD2(E[my_index[:]]-sgnq*q,znu)* (np.abs(E[my_index[:]]-sgnq*q)-k[my_index[:]])**2
+            res1vec[:] *= res1_fac[:]
+            res2_fac = FD2(E,x)*FermiStat(sgnq,-1,pE/E)
+            res2vec = Fm*Chitilde(-E+k,znu,sgnq)
+            my_index = np.where(np.abs(argvec)<np.abs(E+sgnq*q))[0]
+            res2vec[my_index[:]] -= Fp[my_index[:]]*FD2(-E[my_index[:]]-sgnq*q,znu)*(np.abs(E[my_index[:]]+sgnq*q) -k[my_index[:]])**2
+            res2vec[:] *= res2_fac[:]
+            return res_fac*(res1vec+res2vec)
+
+        # Mass shift and ep + ee corrections, Eq. 5.15 - 5.16 Brown & Sawyer
+        def C1dE(E, x, znu, sgnq):
+            pE = np.sqrt(E**2-1.)
+            return -((PRyMini.alphaem*E)/(2.*np.pi*pE))*(2.*np.pi**2)/(3.*x**2)*(ChiFunc(E,pE,x,znu,sgnq)+ ChiFunc(-E,pE,x, znu,sgnq))
+
+        def C2dE1dE2(e1v, e2v, x, znu, sgnq):
+            resvec = np.zeros(len(e1v))
+            e1pe2 = e1v+e2v
+            e1me2 = e1v-e2v
+            min_e1pe2 = 2.+np.abs(e1me2)
+            max_e1pe2 = 2.+max(10.,15./x)+np.abs(e1me2)
+            index_limits = np.where(((e1pe2-min_e1pe2)>0)*((max_e1pe2-e1pe2)>0))[0]
+            def FD2(en, xval):
+                resvec = np.zeros(len(en))
+                argvec = en*xval
+                my_index = np.where(np.abs(argvec)<=exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
+                my_index_overflow = np.where(np.abs(argvec)>exp_cutoff)[0]
+                resvec[my_index_overflow[:]] = 1./(np.exp(np.sign(argvec[my_index_overflow[:]])*exp_cutoff)+1.)
+                return resvec
+            def D_FD2(en, xval):
+                resvec = np.zeros(len(en))
+                argvec = en*xval
+                my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
+                resvec[my_index[:]] = -xval*np.exp(argvec[my_index[:]])/(np.exp(argvec[my_index[:]])+1.)**2
+                return resvec
+            def FD_nu3(en, phi, xval):
+                resvec = np.zeros(len(en))
+                argvec = en*xval-phi
+                my_index = np.where(np.abs(argvec)<exp_cutoff)[0]
+                resvec[my_index[:]] = 1./(np.exp(argvec[my_index[:]])+1.)
+                return resvec
+            def ChiFunc(E, p, x, znu, sgnq):
+                return FD_nu3(E-sgnq*(Q/me),sgnq*xi_nu,znu)*FD2(-E,x)*(E-sgnq*(Q/me))**2
+            #safe_check = np.where((np.abs(p1-p2)>0)*(np.abs(p1)>0)*(np.abs(e2)>0)*(np.abs(p2)>0) *(np.abs(e1)>0))[0]
+            e1 = e1v[index_limits[:]]
+            e2 = e2v[index_limits[:]]
+            p1 = np.sqrt(e1v[index_limits[:]]**2 - 1.)
+            p2 = np.sqrt(e2v[index_limits[:]]**2 - 1.)
+            L_fac = np.log((e1*e2+p1*p2+1.)/(e1*e2-p1*p2+1.))
+            resvec_limits = PRyMini.alphaem/(2.*np.pi)*(ChiFunc(e1,p1,x,znu,sgnq)+ChiFunc(-e1,p1,x,znu,sgnq)) *(-(1./4.)*np.log(((p1+p2)/(p1-p2))**2)*np.log(((p1+p2)/(p1-p2))**2)*(D_FD2(e2, x)*p2/p1*e1**2/e2*(e1+e2)+FD2(e2,x)*e1**2/(p1*p2)*(e2+e1/e2**2))+np.log(((p1+ p2)/(p1-p2))**2)*(D_FD2(e2,x)*(p2**2*e1/e2*(1./p1**2+2.) -e1**2*p2/p1*L_fac)+FD2(e2,x)*(e1/(p1**2*e2**2)*(e2**2+2*p1**2+1.)-(e1**2+e2**2)/(e1+e2)-(e1**2*e2)/(p1*p2)*L_fac))-FD2(e2,x) *(4.*e1*p2/p1+2.*e2*L_fac))
+            resvec[index_limits[:]] = resvec_limits[:]
+            return resvec
+            
+        ##################################################################
+        ######## TruePhoton -> real photon emission processes     ########
+        ######## DiffBremsstrahlung -> bremsstrahlung corrections ########
+        ######## Thermal -> mass shift and pe+ee corrections      ########
+        ##################################################################
+            
+        def L_nTOpThermalTruePhoton_int(E, k, T):
+            x  = me/(PRyMini.kB*T)
+            xnu = me/(PRyMini.kB*T*T_nuOverT(T))
+            return IPENCCRT(E, k, x, xnu, 1)
+            
+        def L_nTOpThermalTruePhoton(T):
+            x = me/(PRyMini.kB*T)
+            min_E = 1.001
+            max_E = max(10.,20./x)
+            min_k = 0.001
+            max_k = max(10.,20./(me/(PRyMini.kB*T)))
+            integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
+            @vegas.batchintegrand
+            def f_batch(x):
+                global store
+                E_val,k_val = np.transpose(x)
+                return {'myres': L_nTOpThermalTruePhoton_int(E_val,k_val,T)}
+            training = integ(f_batch, nitn=n_itn, neval=n_eval)
+            result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
+            return result['myres'].mean
+            
+        def L_nTOpThermalDiffBremsstrahlung_int(E, k, T):
+            x  = me/(PRyMini.kB*T)
+            xnu = me/(PRyMini.kB*T*T_nuOverT(T))
+            return IPENCCRDiffBremsstrahlung(E, k, x, xnu, 1)
+            
+        def L_nTOpThermalDiffBremsstrahlung(T):
+            min_E = 1.001
+            max_E = max(10.,20./(me/(PRyMini.kB*T)))
+            min_k = 0.001
+            max_k = max(10.,20./(me/(PRyMini.kB*T)))
+            integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
+            @vegas.batchintegrand
+            def f_batch(x):
+                global store
+                E_val,k_val = np.transpose(x)
+                return {'myres': L_nTOpThermalDiffBremsstrahlung_int(E_val,k_val,T)}
+            training = integ(f_batch, nitn=n_itn, neval=n_eval)
+            result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
+            return result['myres'].mean
+
+        def L_nTOpThermal_1_int(E, T):
+            return C1dE(E, me/(PRyMini.kB*T), me/(PRyMini.kB*T*T_nuOverT(T)), 1)
+
+        def L_nTOpThermal_1(T):
+            return quad(L_nTOpThermal_1_int, 1., max(25., 150.*(PRyMini.kB*T)/me), args=(T), epsrel = 1.e-2)[0]
+            
+        def L_nTOpThermal_2_3_int(e1pe2, e1me2, T):
+            x  = me/(PRyMini.kB*T)
+            xnu = me/(PRyMini.kB*T*T_nuOverT(T))
+            return 0.5*C2dE1dE2((e1pe2+e1me2)/2.,(e1pe2-e1me2)/2., x, xnu, 1)
+            
+        def L_nTOpThermal_2_3(T):
+            x = me/(PRyMini.kB*T)
+            # res_2
+            min_e1me1 = -max(10.,15./x)
+            max_e1me2 = -0.001
+            min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
+            max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
+            integ_2 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
+            @vegas.batchintegrand
+            def f_batch_2(x):
+                global store
+                e1pe2,e1me2 = np.transpose(x)
+                return {'myres': L_nTOpThermal_2_3_int(e1pe2,e1me2,T)}
+            training_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval)
+            result_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval, adapt=True)
+            res_2 = result_2['myres'].mean
+            # res_3
+            min_e1me1 = 0.001
+            max_e1me2 = max(10.,15./x)
+            min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
+            max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
+            integ_3 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
+            @vegas.batchintegrand
+            def f_batch_3(x):
+                global store
+                e1pe2,e1me2 = np.transpose(x)
+                return {'myres': L_nTOpThermal_2_3_int(e1pe2,e1me2,T)}
+            training_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval)
+            result_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval, adapt=True)
+            res_3 = result_3['myres'].mean
+            return res_2+res_3
+            
+        def L_nTOpThermal_tot(T):
+            return L_nTOpThermal_1(T)+L_nTOpThermal_2_3(T)
+
+        ####################
+        # p -> n processes #
+        ####################
+        # p -> n real photon corrections
+        def L_pTOnThermalTruePhoton_int(E, k, T):
+            x  = me/(PRyMini.kB*T)
+            xnu = me/(PRyMini.kB*T*T_nuOverT(T))
+            return IPENCCRT(E, k, x, xnu, -1)
+            
+        def L_pTOnThermalTruePhoton(T):
+            x = me/(PRyMini.kB*T)
+            min_E = 1.001
+            max_E = max(10.,20./x)
+            min_k = 0.001
+            max_k = max(10.,20./(me/(PRyMini.kB*T)))
+            integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
+            @vegas.batchintegrand
+            def f_batch(x):
+                global store
+                E_val,k_val = np.transpose(x)
+                return {'myres': L_pTOnThermalTruePhoton_int(E_val,k_val,T)}
+            training = integ(f_batch, nitn=n_itn, neval=n_eval)
+            result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
+            return result['myres'].mean
+            
+        # p -> n brems corrections
+        def L_pTOnThermalDiffBremsstrahlung_int(E, k, T):
+            x  = me/(PRyMini.kB*T)
+            xnu = me/(PRyMini.kB*T*T_nuOverT(T))
+            return IPENCCRDiffBremsstrahlung(E, k, x, xnu, -1)
+            
+        def L_pTOnThermalDiffBremsstrahlung(T):
+            min_E = 1.001
+            max_E = max(10.,20./(me/(PRyMini.kB*T)))
+            min_k = 0.001
+            max_k = max(10.,20./(me/(PRyMini.kB*T)))
+            integ = vegas.Integrator([[min_E,max_E],[min_k,max_k]])
+            @vegas.batchintegrand
+            def f_batch(x):
+                global store
+                E_val,k_val = np.transpose(x)
+                return {'myres': L_pTOnThermalDiffBremsstrahlung_int(E_val,k_val,T)}
+            training = integ(f_batch, nitn=n_itn, neval=n_eval)
+            result = integ(f_batch, nitn=n_itn, neval=n_eval, adapt=True)
+            return result['myres'].mean
+            
+        # p -> n mass shift + pe+ee corrections
+        def L_pTOnThermal_1_int(E, T):
+            return C1dE(E, me/(PRyMini.kB*T), me/(PRyMini.kB*T*T_nuOverT(T)), -1)
+
+        def L_pTOnThermal_1(T):
+            return quad(L_pTOnThermal_1_int, 1., max(25., 150.*(PRyMini.kB*T)/me), args=(T), epsrel = 1.e-2)[0]
+            
+        def L_pTOnThermal_2_3_int(e1pe2, e1me2, T):
+            x  = me/(PRyMini.kB*T)
+            xnu = me/(PRyMini.kB*T*T_nuOverT(T))
+            return 0.5*C2dE1dE2((e1pe2+e1me2)/2.,(e1pe2-e1me2)/2., x, xnu, -1)
+            
+        def L_pTOnThermal_2_3(T):
+            x = me/(PRyMini.kB*T)
+            # res_2
+            min_e1me1 = -max(10.,15./x)
+            max_e1me2 = -0.001
+            min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
+            max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
+            integ_2 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
+            @vegas.batchintegrand
+            def f_batch_2(x):
+                global store
+                e1pe2,e1me2 = np.transpose(x)
+                return {'myres': L_pTOnThermal_2_3_int(e1pe2,e1me2,T)}
+            training_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval)
+            result_2 = integ_2(f_batch_2, nitn=n_itn, neval=n_eval, adapt=True)
+            res_2 = result_2['myres'].mean
+            # res_3
+            min_e1me1 = 0.001
+            max_e1me2 = max(10.,15./x)
+            min_e1pe2 = 2.001+min(np.abs(min_e1me1),np.abs(max_e1me2))
+            max_e1pe2 = 2.+max(np.abs(min_e1me1),np.abs(max_e1me2))
+            integ_3 = vegas.Integrator([[min_e1pe2,max_e1pe2],[min_e1me1,max_e1me2]])
+            @vegas.batchintegrand
+            def f_batch_3(x):
+                global store
+                e1pe2,e1me2 = np.transpose(x)
+                return {'myres': L_pTOnThermal_2_3_int(e1pe2,e1me2,T)}
+            training_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval)
+            result_3 = integ_3(f_batch_3, nitn=n_itn, neval=n_eval, adapt=True)
+            res_3 = result_3['myres'].mean
+            return res_2+res_3
+        
+        def L_pTOnThermal_tot(T):
+            return L_pTOnThermal_1(T)+L_pTOnThermal_2_3(T)
+
+        # Gathering all thermal corrections together
+        def L_nTOpCCRTh(T):
+            L_n_p_real_photon = L_nTOpThermalTruePhoton(T)
+            L_n_p_thermal_brems = L_nTOpThermalDiffBremsstrahlung(T)
+            L_n_p_thermal_mass = L_nTOpThermal_tot(T)
+            return L_n_p_real_photon+L_n_p_thermal_brems+L_n_p_thermal_mass
+        def L_pTOnCCRTh(T):
+            T_threshold = 10**(8.2)
+            if(T< T_threshold):
+                return 0.
+            else:
+                L_p_n_real_photon = L_pTOnThermalTruePhoton(T)
+                L_p_n_thermal_brems = L_pTOnThermalDiffBremsstrahlung(T)
+                L_p_n_thermal_mass = L_pTOnThermal_tot(T)
+            return L_p_n_real_photon+L_p_n_thermal_brems+L_p_n_thermal_mass
+    
         if(PRyMini.verbose_flag):
             print(" ")
             print("Re-evaluating n <--> p thermal corrections")
@@ -652,6 +632,9 @@ def ComputeWeakRates(Tvec):
     else:
         T_nTOp_thermal_interval, L_nTOpCCRTh_res = np.loadtxt(my_dir+"/PRyMrates/nTOp/"+"nTOp_thermal_corrections.txt", unpack = True)
         T_nTOp_thermal_interval, L_pTOnCCRTh_res = np.loadtxt(my_dir+"/PRyMrates/nTOp/"+"pTOn_thermal_corrections.txt", unpack = True)
+    ################################
+    # Splining thermal corrections #
+    ################################
     L_nTOpCCRTh_interp = interp1d(T_nTOp_thermal_interval[:],L_nTOpCCRTh_res[:],bounds_error=False,fill_value="extrapolate",kind='quadratic')
     L_pTOnCCRTh_interp = interp1d(T_nTOp_thermal_interval[:],L_pTOnCCRTh_res[:],bounds_error=False,fill_value="extrapolate",kind='quadratic')
 
