@@ -59,7 +59,7 @@ t_end = 1.e+7 # [s], chosen as 10 x O(t(T_end))
 # Set flag to True for incomplete decoupling effects in a(T)
 aTid_flag = True
 # Set flag to compute background
-compute_bckg_flag = False
+compute_bckg_flag = True
 # Set flag to True to save background thermodynamics, if recomputed
 save_bckg_flag = False
 # Set flag to True for some new species with temperature T_NP
@@ -76,7 +76,7 @@ NP_e_flag = False
 # Flags for n <--> p weak rates #
 #################################
 # Set flag to True to re-compute the weak rates
-compute_nTOp_flag = False # if True, re-compute bulk of weak-rate effects from scratch
+compute_nTOp_flag = True # if True, re-compute bulk of weak-rate effects from scratch
 sampling_nTOp = 50  # recommended for accuracy (number of points used for each era: HT,MT,LT)
 # Set flag to True to compute the weak rates in Born approximation
 nTOpBorn_flag = False # if True, faster evaluation of n <--> p  rates (at the expense of precision)
