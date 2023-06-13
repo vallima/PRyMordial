@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from numba import njit
 from scipy.integrate import quad
 from scipy.interpolate import interp1d
 from scipy.special import kv
 import PRyM.PRyM_init as PRyMini
+if(PRyMini.numba_flag):
+    from numba import njit
 
 my_dir = PRyMini.working_dir
 if(PRyMini.verbose_flag):
@@ -48,9 +49,13 @@ def drho_g_dT(Tg):
 # e+- species #
 ###############
 # e+- energy density
-@njit
-def rho_e_int(E,Tg):
-    return E**2*(E**2-(PRyMini.me/Tg)**2)**0.5/(np.exp(E)+1.)
+if(PRyMini.numba_flag):
+    @njit
+    def rho_e_int(E,Tg):
+        return E**2*(E**2-(PRyMini.me/Tg)**2)**0.5/(np.exp(E)+1.)
+else:
+    def rho_e_int(E,Tg):
+        return E**2*(E**2-(PRyMini.me/Tg)**2)**0.5/(np.exp(E)+1.)
 def rho_e(Tg):
     if Tg < PRyMini.me/30.:
         return 0.0
@@ -58,9 +63,13 @@ def rho_e(Tg):
         res_int = quad(rho_e_int,PRyMini.me/Tg,100.,args=(Tg),epsabs=1e-12,epsrel=1e-12)[0]
         return 4./(2*np.pi**2)*Tg**4*res_int
 # drho_e/dT
-@njit
-def drho_e_dT_int(E,Tg):
-    return E**3*(E**2-(PRyMini.me/Tg)**2)**0.5/np.cosh(E/2.0)**2
+if(PRyMini.numba_flag):
+    @njit
+    def drho_e_dT_int(E,Tg):
+        return E**3*(E**2-(PRyMini.me/Tg)**2)**0.5/np.cosh(E/2.0)**2
+else:
+    def drho_e_dT_int(E,Tg):
+        return E**3*(E**2-(PRyMini.me/Tg)**2)**0.5/np.cosh(E/2.0)**2
 def drho_e_dT(Tg):
     if Tg < PRyMini.me/30.:
         return 0.0
@@ -68,9 +77,13 @@ def drho_e_dT(Tg):
         res_int = quad(drho_e_dT_int,PRyMini.me/Tg,100.,args=(Tg),epsabs=1e-12,epsrel = 1e-12)[0]
         return 1./(2*np.pi**2)*Tg**3*res_int
 # e+- pressure density
-@njit
-def p_e_int(E,Tg):
-    return (E**2-(PRyMini.me/Tg)**2)**1.5/(np.exp(E)+1.)
+if(PRyMini.numba_flag):
+    @njit
+    def p_e_int(E,Tg):
+        return (E**2-(PRyMini.me/Tg)**2)**1.5/(np.exp(E)+1.)
+else:
+    def p_e_int(E,Tg):
+        return (E**2-(PRyMini.me/Tg)**2)**1.5/(np.exp(E)+1.)
 def p_e(Tg):
     if Tg < PRyMini.me/30.:
         return 0.0
