@@ -15,6 +15,10 @@ if(working_dir == " "):
     exit(0)
 # Set flag to True for verbose mode
 verbose_flag = False
+# Set flag to True if Numba is installed
+numba_flag = True # if True, speed up some integrations in PRyM_thermo.py
+# Set flag to True if Numdifftools is installed
+numdiff_flag = True # if True, numerical derivative slower but more stable
 
 ########################################
 # Units for PRyMordial nuclear network #
@@ -82,7 +86,7 @@ sampling_nTOp = 50  # recommended for accuracy (number of points used for each e
 nTOpBorn_flag = False # if True, faster evaluation of n <--> p  rates (at the expense of precision)
 # Set flag to True to re-compute thermal radiative corrections in n <--> p  rates
 # Computationally intensive, yield subpermil effects on D/H and Li7/H (even smaller on helium)
-compute_nTOp_thermal_flag = False # recommended: effects already stored, no need to recompute them
+compute_nTOp_thermal_flag = False # recommended: effects already stored, will need vegas otherwise
 sampling_nTOp_thermal = 50 # recommended for accuracy (number of points from T_start to T_end)
 # Set flag to True to use the neutron lifetime as standard normalization for the weak rates
 tau_n_flag = True
