@@ -14,7 +14,7 @@ Dependencies:
 - PyJulia (optional) – pip install julia
 - diffeqpy (optional) – pip install diffeqpy
 
-The code can be easily modified to avoid dependencies on Numba and Numdifftools and it does not make use of Vegas by default.
+The code can easily avoid dependencies on Numba and Numdifftools and it does not make use of Vegas by default.
 The installation of these libraries still remains recommended for the best possible usage of the package.
 
 The optional dependencies above require:
