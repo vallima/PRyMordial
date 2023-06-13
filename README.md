@@ -8,13 +8,14 @@ Dependencies:
 -------------
 - NumPy (mandatory) – pip install numpy
 - SciPy (mandatory) – pip install scipy
-- Vegas (mandatory) – pip install vegas
 - Numba (recommended) – pip install numba
 - Numdifftools (recommended) – pip install numdifftools
+- Vegas (recommended) – pip install vegas
 - PyJulia (optional) – pip install julia
 - diffeqpy (optional) – pip install diffeqpy
 
-The code can be easily modified to avoid dependencies on Numba and Numdifftools. 
+The code can be easily modified to avoid dependencies on Numba and Numdifftools and it does not make use of Vegas by default.
+The installation of these libraries still remains recommended for the best possible usage of the package.
 The optional dependencies above require:
 - the Julia programming language, https://julialang.org
 - the open-source software for scientific machine learning, https://sciml.ai
