@@ -16,6 +16,7 @@ Dependencies:
 
 The code can be easily modified to avoid dependencies on Numba and Numdifftools and it does not make use of Vegas by default.
 The installation of these libraries still remains recommended for the best possible usage of the package.
+
 The optional dependencies above require:
 - the Julia programming language, https://julialang.org
 - the open-source software for scientific machine learning, https://sciml.ai
