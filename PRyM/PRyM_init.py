@@ -103,9 +103,9 @@ if(NP_nTOp_flag):
 ###########################
 # Flags for nuclear rates #
 ###########################
-# Set flag to True to use Nacre-II database for 12 key nuclear reactions
-flag_nacreii = False # as default uses code adopts PRIMAT nuclear rates
-if(flag_nacreii):
+# Set flag to True to use NACRE II database for 12 key nuclear reactions
+nacreii_flag = False # as default code adopts PRIMAT compilation for nuclear rates
+if(nacreii_flag):
     rates_dir = "key_nacreii_rates/"
 else:
     rates_dir = "key_primat_rates/"
