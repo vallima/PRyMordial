@@ -16,9 +16,9 @@ if(working_dir == " "):
 # Set flag to True for verbose mode
 verbose_flag = False
 # Set flag to True if Numba is installed
-numba_flag = True # if True, speed up some integrations in PRyM_thermo.py
+numba_flag = True # if True, speed up some integrations in PRyM_thermo.py with Numba
 # Set flag to True if Numdifftools is installed
-numdiff_flag = True # if True, numerical derivative slower but more stable
+numdiff_flag = False # if True, numerical derivative in PRyM_main.py via Numdifftools
 
 ########################################
 # Units for PRyMordial nuclear network #
