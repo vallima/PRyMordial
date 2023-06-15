@@ -119,16 +119,19 @@ julia_flag = False # if True, requires Julia dependencies
 ##############################################################
 # Fundamental constants and particle masses in natural units #
 ##############################################################
+# EW sector: Most precise measurements adopted
 alphaem = 1./137.035999084 # fine structure constant, PDG
-sW2 = 0.23121 # sine squared of weak mixing angle, PDG
 GF = 1.1663787*10**-5*1.e-6 # Fermi coupling constant in [MeV-2], PDG
-geL, geR, gmuL, gmuR = 1./2.+sW2,sW2,-1./2.+sW2,sW2 # tree-level EW couplings
-GN = 6.70883*1.e-39*1.e-6 # Newton gravitational constant in [MeV-2]
+mZ = 91.1876*1.e+3 # Z mass in [MeV], PDG
+# Tree-level relations for EW couplings
+sW2 = 0.5*(1.-np.sqrt(1.-2.*np.sqrt(2.)*np.pi*alphaem/(GF*mZ**2)))
+geL, geR, gmuL, gmuR = 1./2.+sW2,sW2,-1./2.+sW2,sW2
+# Fermion masses
 me = 0.51099895 # electron mass in [MeV], PDG
 mn = 939.56542052 # neutron mass in [MeV], PDG
 mp = 938.27208816 # proton mass in [MeV], PDG
-mW = 80.379*1.e+3 # W mass in [MeV], PDG
-mZ = 91.1876*1.e+3 # Z mass in [MeV], PDG
+# Gravitational constant and mass
+GN = 6.70883*1.e-39*1.e-6 # Newton constant in [MeV-2]
 Mpl = 1./np.sqrt(GN) # Planck mass in [MeV], PDG
 
 #################################################
