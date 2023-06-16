@@ -288,17 +288,17 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
     # mB = averaged baryon mass in MeV: assumes helium fraction of 24.7%
     # rho0B = atomic density (it includes electron mass + binding energies)
     def nB(a):
-        n0B = PRyMini.n0CMB*PRyMini.eta0 # baryon number density of today MeV^3
+        n0B = PRyMini.n0CMB*PRyMini.eta0b # baryon number density of today MeV^3
         return n0B/a**3 # MeV^3
     # Baryon-to-photon ratio as a function of temperature given in [K]
-    def eta_of_T(T_K):
+    def etab_of_T(T_K):
         T_MeV = T_K/PRyMini.MeV_to_Kelvin
         ngCMB = (2.*zeta(3))/(np.pi**2)*T_MeV**3
         return nB(a_of_T(T_MeV))/ngCMB
     # Baryon energy density adopted in the nuclear network
     # rhoB = nucleonic density (i.e. rho0B measured by CMB x ma/mB)
     def rhoB_BBN(a):
-        n0B = PRyMini.n0CMB*PRyMini.eta0
+        n0B = PRyMini.n0CMB*PRyMini.eta0b
         rho0BmaOvermB = PRyMini.ma*n0B
         return rho0BmaOvermB*PRyMini.MeV4_to_gcmm3/a**3 # CGS, a0 = 1
         
@@ -414,7 +414,7 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
         Mass = A*PRyMini.ma*PRyMini.MeV+PRyMini.keV*PRyMini.NuclExcessMass[name]-Z*PRyMini.me*PRyMini.MeV
         BindingE = N*PRyMini.NuclExcessMass["n"] + Z*PRyMini.NuclExcessMass["p"]-PRyMini.NuclExcessMass[name]
         NormYA = (Mass/((PRyMini.mn*PRyMini.MeV)**(A-Z)*(PRyMini.mp*PRyMini.MeV)**Z))**(3/2)
-        return (2*PRyMini.NuclSpin[name]+1)*zeta(3)**(A-1)*np.pi**((1-A)/2)*2**((3*A-5)/2)*NormYA*(PRyMini.kB*T)**(3/2*(A-1))*eta_of_T(T)**(A-1)*Yp**Z*Yn**(A-Z) *np.exp(BindingE*PRyMini.keV/(PRyMini.kB*T))
+        return (2*PRyMini.NuclSpin[name]+1)*zeta(3)**(A-1)*np.pi**((1-A)/2)*2**((3*A-5)/2)*NormYA*(PRyMini.kB*T)**(3/2*(A-1))*etab_of_T(T)**(A-1)*Yp**Z*Yn**(A-Z) *np.exp(BindingE*PRyMini.keV/(PRyMini.kB*T))
     
     #########################################################
     # Nuclear network: Final yields for p,d,t,He3,a,Li7,Be7 #
