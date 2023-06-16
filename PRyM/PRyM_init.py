@@ -244,159 +244,195 @@ Be7nLi7p_T9,Be7nLi7p_median,Be7nLi7p_expsigma = np.loadtxt(working_dir+"/PRyMrat
 # Li7p -> aa
 alpha_Li7paa,beta_Li7paa,gamma_Li7paa = 4.6898,0.,-201.295
 Li7paa_T9,Li7paa_median,Li7paa_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/"+rates_dir+"Li7paa.txt",unpack = True)
+###############################
+# Reloading key nuclear rates #
+###############################
+def ReloadKeyRates():
+    global working_dir,rates_dir,rates_dir
+    if(nacreii_flag):
+        rates_dir = "key_nacreii_rates/"
+    else:
+        rates_dir = "key_primat_rates/"
+    dir_key_rates = working_dir+"/PRyMrates/nuclear/"+rates_dir
+    global npdg_T9,npdg_median,npdg_expsigma
+    npdg_T9,npdg_median,npdg_expsigma = np.loadtxt(dir_key_rates+"npdg.txt",unpack = True)
+    global dpHe3g_T9,dpHe3g_median,dpHe3g_expsigma
+    dpHe3g_T9,dpHe3g_median,dpHe3g_expsigma = np.loadtxt(dir_key_rates+"dpHe3g.txt",unpack = True)
+    global ddHe3n_T9,ddHe3n_median,ddHe3n_expsigma
+    ddHe3n_T9,ddHe3n_median,ddHe3n_expsigma = np.loadtxt(dir_key_rates+"ddHe3n.txt",unpack = True)
+    global ddtp_T9,ddtp_median,ddtp_expsigma
+    ddtp_T9,ddtp_median,ddtp_expsigma = np.loadtxt(dir_key_rates+"ddtp.txt",unpack = True)
+    global tpag_T9,tpag_median,tpag_expsigma
+    tpag_T9,tpag_median,tpag_expsigma = np.loadtxt(dir_key_rates+"tpag.txt",unpack = True)
+    global tdan_T9,tdan_median,tdan_expsigma
+    tdan_T9,tdan_median,tdan_expsigma = np.loadtxt(dir_key_rates+"tdan.txt",unpack = True)
+    global taLi7g_T9,taLi7g_median,taLi7g_expsigma
+    taLi7g_T9,taLi7g_median,taLi7g_expsigma = np.loadtxt(dir_key_rates+"taLi7g.txt",unpack = True)
+    global He3ntp_T9,He3ntp_median,He3ntp_expsigma
+    He3ntp_T9,He3ntp_median,He3ntp_expsigma = np.loadtxt(dir_key_rates+"He3ntp.txt",unpack = True)
+    global He3dap_T9,He3dap_median,He3dap_expsigma
+    He3dap_T9,He3dap_median,He3dap_expsigma = np.loadtxt(dir_key_rates+"He3dap.txt",unpack = True)
+    global He3aBe7g_T9,He3aBe7g_median,He3aBe7g_expsigma
+    He3aBe7g_T9,He3aBe7g_median,He3aBe7g_expsigma = np.loadtxt(dir_key_rates+"He3aBe7g.txt",unpack = True)
+    global Be7nLi7p_T9,Be7nLi7p_median,Be7nLi7p_expsigma
+    Be7nLi7p_T9,Be7nLi7p_median,Be7nLi7p_expsigma = np.loadtxt(dir_key_rates+"Be7nLi7p.txt",unpack = True)
+    global Li7paa_T9,Li7paa_median,Li7paa_expsigma
+    Li7paa_T9,Li7paa_median,Li7paa_expsigma = np.loadtxt(dir_key_rates+"Li7paa.txt",unpack = True)
 #####################################################
 # Extra nuclear reactions implemented (63 in total) #
 #####################################################
+# Directory for additional nuclear rates
+dir_other_rates = working_dir+"/PRyMrates/nuclear/other_nucl_rates/"
 # Li7p -> aag
 alpha_Li7paag,beta_Li7paag,gamma_Li7paag = 4.6898,0.,-201.295
-Li7paag_T9,Li7paag_median,Li7paag_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7paag.txt",unpack = True)
+Li7paag_T9,Li7paag_median,Li7paag_expsigma = np.loadtxt(dir_other_rates+"Li7paag.txt",unpack = True)
 # Be7n -> aa
 alpha_Be7naa,beta_Be7naa,gamma_Be7naa = 4.6982,0.,-220.3871
-Be7naa_T9,Be7naa_median,Be7naa_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7naa.txt",unpack = True)
+Be7naa_T9,Be7naa_median,Be7naa_expsigma = np.loadtxt(dir_other_rates+"Be7naa.txt",unpack = True)
 # Be7d -> aap
 alpha_Be7daap,beta_Be7daap,gamma_Be7daap = 9.9579*1.e-10,-1.5,-194.5722
-Be7daap_T9,Be7daap_median,Be7daap_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7daap.txt",unpack = True)
+Be7daap_T9,Be7daap_median,Be7daap_expsigma = np.loadtxt(dir_other_rates+"Be7daap.txt",unpack = True)
 # da -> Li6g
 alpha_daLi6g,beta_daLi6g,gamma_daLi6g = 1.53053*1.e+10,1.5,-17.1023
-daLi6g_T9,daLi6g_median,daLi6g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"daLi6g.txt",unpack = True)
+daLi6g_T9,daLi6g_median,daLi6g_expsigma = np.loadtxt(dir_other_rates+"daLi6g.txt",unpack = True)
 # Li6p -> Be7g
 alpha_Li6pBe7g,beta_Li6pBe7g,gamma_Li6pBe7g = 1.18778*1.e+10,1.5,-65.0648
-Li6pBe7g_T9,Li6pBe7g_median,Li6pBe7g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6pBe7g.txt",unpack = True)
+Li6pBe7g_T9,Li6pBe7g_median,Li6pBe7g_expsigma = np.loadtxt(dir_other_rates+"Li6pBe7g.txt",unpack = True)
 # Li6p -> He3a
 alpha_Li6pHe3a,beta_Li6pHe3a,gamma_Li6pHe3a = 1.06729,0.,-46.6469
-Li6pHe3a_T9,Li6pHe3a_median,Li6pHe3a_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6pHe3a.txt",unpack = True)
+Li6pHe3a_T9,Li6pHe3a_median,Li6pHe3a_expsigma = np.loadtxt(dir_other_rates+"Li6pHe3a.txt",unpack = True)
 # B8n -> aap
 alpha_B8naap,beta_B8naap,gamma_B8naap = 3.6007*10**-10,-1.5,-218.7915
-B8naap_T9,B8naap_median,B8naap_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"B8naap.txt",unpack = True)
+B8naap_T9,B8naap_median,B8naap_expsigma = np.loadtxt(dir_other_rates+"B8naap.txt",unpack = True)
 # Li6He3 -> aap
 alpha_Li6He3aap,beta_Li6He3aap,gamma_Li6He3aap = 7.2413*10**-10,-1.5,-195.8748
-Li6He3aap_T9,Li6He3aap_median,Li6He3aap_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6He3aap.txt",unpack = True)
+Li6He3aap_T9,Li6He3aap_median,Li6He3aap_expsigma = np.loadtxt(dir_other_rates+"Li6He3aap.txt",unpack = True)
 # Li6t -> aan
 alpha_Li6taan,beta_Li6taan,gamma_Li6taan = 7.2333*10**-10,-1.5,-187.0131
-Li6taan_T9,Li6taan_median,Li6taan_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6taan.txt",unpack = True)
+Li6taan_T9,Li6taan_median,Li6taan_expsigma = np.loadtxt(dir_other_rates+"Li6taan.txt",unpack = True)
 # Li6t -> Li8p
 alpha_Li6tLi8p,beta_Li6tLi8p,gamma_Li6tLi8p = 2.0167,0.,-9.306
-Li6tLi8p_T9,Li6tLi8p_median,Li6tLi8p_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6tLi8p.txt",unpack = True)
+Li6tLi8p_T9,Li6tLi8p_median,Li6tLi8p_expsigma = np.loadtxt(dir_other_rates+"Li6tLi8p.txt",unpack = True)
 # Li7He3 -> Li6a
 alpha_Li7He3Li6a,beta_Li7He3Li6a,gamma_Li7He3Li6a = 2.1972,0.,-154.6607
-Li7He3Li6a_T9,Li7He3Li6a_median,Li7He3Li6a_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7He3Li6a.txt",unpack = True)
+Li7He3Li6a_T9,Li7He3Li6a_median,Li7He3Li6a_expsigma = np.loadtxt(dir_other_rates+"Li7He3Li6a.txt",unpack = True)
 # Li8He3 -> Li7a
 alpha_Li8He3Li7a,beta_Li8He3Li7a,gamma_Li8He3Li7a = 1.9994,0.,-215.2055
-Li8He3Li7a_T9,Li8He3Li7a_median,Li8He3Li7a_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li8He3Li7a.txt",unpack = True)
+Li8He3Li7a_T9,Li8He3Li7a_median,Li8He3Li7a_expsigma = np.loadtxt(dir_other_rates+"Li8He3Li7a.txt",unpack = True)
 # Be7t -> Li6a
 alpha_Be7tLi6a,beta_Be7tLi6a,gamma_Be7tLi6a = 2.1977,0.,-164.8783
-Be7tLi6a_T9,Be7tLi6a_median,Be7tLi6a_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7tLi6a.txt",unpack = True)
+Be7tLi6a_T9,Be7tLi6a_median,Be7tLi6a_expsigma = np.loadtxt(dir_other_rates+"Be7tLi6a.txt",unpack = True)
 # B8t -> Be7a
 alpha_B8tBe7a,beta_B8tBe7a,gamma_B8tBe7a = 1.9999,0.,-228.3344
-B8tBe7a_T9,B8tBe7a_median,B8tBe7a_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"B8tBe7a.txt",unpack = True)
+B8tBe7a_T9,B8tBe7a_median,B8tBe7a_expsigma = np.loadtxt(dir_other_rates+"B8tBe7a.txt",unpack = True)
 # B8n -> Li6He3
 alpha_B8nLi6He3,beta_B8nLi6He3,gamma_B8nLi6He3 = 0.49669,0.,-22.9167
-B8nLi6He3_T9,B8nLi6He3_median,B8nLi6He3_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"B8nLi6He3.txt",unpack = True)
+B8nLi6He3_T9,B8nLi6He3_median,B8nLi6He3_expsigma = np.loadtxt(dir_other_rates+"B8nLi6He3.txt",unpack = True)
 # B8n -> Be7d
 alpha_B8nBe7d,beta_B8nBe7d,gamma_B8nBe7d = 0.36119,0.,-24.2194
-B8nBe7d_T9,B8nBe7d_median,B8nBe7d_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"B8nBe7d.txt",unpack = True)
+B8nBe7d_T9,B8nBe7d_median,B8nBe7d_expsigma = np.loadtxt(dir_other_rates+"B8nBe7d.txt",unpack = True)
 # Li6t -> Li7d
 alpha_Li6tLi7d,beta_Li6tLi7d,gamma_Li6tLi7d = 0.72734,0.,-11.5332
-Li6tLi7d_T9,Li6tLi7d_median,Li6tLi7d_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6tLi7d.txt",unpack = True)
+Li6tLi7d_T9,Li6tLi7d_median,Li6tLi7d_expsigma = np.loadtxt(dir_other_rates+"Li6tLi7d.txt",unpack = True)
 # Li6He3 -> Be7d
 alpha_Li6He3Be7d,beta_Li6He3Be7d,gamma_Li6He3Be7d = 0.72719,0.,-1.3157
-Li6He3Be7d_T9,Li6He3Be7d_median,Li6He3Be7d_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6He3Be7d.txt",unpack = True)
+Li6He3Be7d_T9,Li6He3Be7d_median,Li6He3Be7d_expsigma = np.loadtxt(dir_other_rates+"Li6He3Be7d.txt",unpack = True)
 # Li7He3 -> aad
 alpha_Li7He3aad,beta_Li7He3aad,gamma_Li7He3aad = 2.8700*10**-10,-1.5,-137.5575
-Li7He3aad_T9,Li7He3aad_median,Li7He3aad_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7He3aad.txt",unpack = True)
+Li7He3aad_T9,Li7He3aad_median,Li7He3aad_expsigma = np.loadtxt(dir_other_rates+"Li7He3aad.txt",unpack = True)
 # Li8He3 -> aat
 alpha_Li8He3aat,beta_Li8He3aat,gamma_Li8He3aat = 3.5907*10**-10,-1.5,-186.5821
-Li8He3aat_T9,Li8He3aat_median,Li8He3aat_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li8He3aat.txt",unpack = True)
+Li8He3aat_T9,Li8He3aat_median,Li8He3aat_expsigma = np.loadtxt(dir_other_rates+"Li8He3aat.txt",unpack = True)
 # Be7t -> aad
 alpha_Be7taad,beta_Be7taad,gamma_Be7taad = 2.8706*10**-10,-1.5,-147.7751
-Be7taad_T9,Be7taad_median,Be7taad_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7taad.txt",unpack = True)
+Be7taad_T9,Be7taad_median,Be7taad_expsigma = np.loadtxt(dir_other_rates+"Be7taad.txt",unpack = True)
 # Be7t -> aad
 alpha_Be7tLi7He3,beta_Be7tLi7He3,gamma_Be7tLi7He3 = 1.0002,0.,-10.2176
-Be7tLi7He3_T9,Be7tLi7He3_median,Be7tLi7He3_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7tLi7He3.txt",unpack = True)
+Be7tLi7He3_T9,Be7tLi7He3_median,Be7tLi7He3_expsigma = np.loadtxt(dir_other_rates+"Be7tLi7He3.txt",unpack = True)
 # B8d -> Be7He3
 alpha_B8dBe7He3,beta_B8dBe7He3,gamma_B8dBe7He3 = 1.2514,0,-62.1535
-B8dBe7He3_T9,B8dBe7He3_median,B8dBe7He3_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"B8dBe7He3.txt",unpack = True)
+B8dBe7He3_T9,B8dBe7He3_median,B8dBe7He3_expsigma = np.loadtxt(dir_other_rates+"B8dBe7He3.txt",unpack = True)
 # B8t -> aaHe3
 alpha_B8taaHe3,beta_B8taaHe3,gamma_B8taaHe3 = 3.5922*10**-10,-1.5,-209.9285
-B8taaHe3_T9,B8taaHe3_median,B8taaHe3_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"B8taaHe3.txt",unpack = True)
+B8taaHe3_T9,B8taaHe3_median,B8taaHe3_expsigma = np.loadtxt(dir_other_rates+"B8taaHe3.txt",unpack = True)
 # Be7He3p -> paa
 alpha_Be7He3ppaa,beta_Be7He3ppaa,gamma_Be7He3ppaa = 1.2201*10**-19,-3.,-130.8113
-Be7He3ppaa_T9,Be7He3ppaa_median,Be7He3ppaa_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7He3ppaa.txt",unpack = True)
+Be7He3ppaa_T9,Be7He3ppaa_median,Be7He3ppaa_expsigma = np.loadtxt(dir_other_rates+"Be7He3ppaa.txt",unpack = True)
 # dd -> ag
 alpha_ddag,beta_ddag,gamma_ddag = 4.5310*10**10,1.5,-276.7271
-ddag_T9,ddag_median,ddag_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"ddag.txt",unpack = True)
+ddag_T9,ddag_median,ddag_expsigma = np.loadtxt(dir_other_rates+"ddag.txt",unpack = True)
 # He3He3 -> app
 alpha_He3He3app,beta_He3He3app,gamma_He3He3app = 3.3915*10**-10,-1.5,-149.2290
-He3He3app_T9,He3He3app_median,He3He3app_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"He3He3app.txt",unpack = True)
+He3He3app_T9,He3He3app_median,He3He3app_expsigma = np.loadtxt(dir_other_rates+"He3He3app.txt",unpack = True)
 # Be7p -> B8g
 alpha_Be7pB8g,beta_Be7pB8g,gamma_Be7pB8g = 1.3063*10**10,1.5,-1.5825
-Be7pB8g_T9,Be7pB8g_median,Be7pB8g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7pB8g.txt",unpack = True)
+Be7pB8g_T9,Be7pB8g_median,Be7pB8g_expsigma = np.loadtxt(dir_other_rates+"Be7pB8g.txt",unpack = True)
 # Li7d -> aan
 alpha_Li7daan,beta_Li7daan,gamma_Li7daan = 9.9435*10**-10,-1.5,-175.4916
-Li7daan_T9,Li7daan_median,Li7daan_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7daan.txt",unpack = True)
+Li7daan_T9,Li7daan_median,Li7daan_expsigma = np.loadtxt(dir_other_rates+"Li7daan.txt",unpack = True)
 # dn -> tg
 alpha_dntg,beta_dntg,gamma_dntg = 1.6364262*10**10,1.5,-72.612132
-dntg_T9,dntg_median,dntg_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"dntg.txt",unpack = True)
+dntg_T9,dntg_median,dntg_expsigma = np.loadtxt(dir_other_rates+"dntg.txt",unpack = True)
 # tt -> ann
 alpha_ttann,beta_ttann,gamma_ttann = 3.3826187*10**-10,-1.5,-131.50322
-ttann_T9,ttann_median,ttann_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"ttann.txt",unpack = True)
+ttann_T9,ttann_median,ttann_expsigma = np.loadtxt(dir_other_rates+"ttann.txt",unpack = True)
 # He3n -> ag
 alpha_He3nag,beta_He3nag,gamma_He3nag = 2.6152351*10**10,1.5,-238.79338
-He3nag_T9,He3nag_median,He3nag_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"He3nag.txt",unpack = True)
+He3nag_T9,He3nag_median,He3nag_expsigma = np.loadtxt(dir_other_rates+"He3nag.txt",unpack = True)
 # He3t -> ad
 alpha_He3tad,beta_He3tad,gamma_He3tad = 1.5981381,0.,-166.18124
-He3tad_T9,He3tad_median,He3tad_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"He3tad.txt",unpack = True)
+He3tad_T9,He3tad_median,He3tad_expsigma = np.loadtxt(dir_other_rates+"He3tad.txt",unpack = True)
 # He3t -> anp
 alpha_He3tanp,beta_He3tanp,gamma_He3tanp = 3.3886566*10**-10,-1.5,-140.36623
-He3tanp_T9,He3tanp_median,He3tanp_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"He3tanp.txt",unpack = True)
+He3tanp_T9,He3tanp_median,He3tanp_expsigma = np.loadtxt(dir_other_rates+"He3tanp.txt",unpack = True)
 # Li7t -> aan
 alpha_Li7taan,beta_Li7taan,gamma_Li7taan = 1.2153497*10**-19,-3.,-102.86767
-Li7taan_T9,Li7taan_median,Li7taan_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7taan.txt",unpack = True)
+Li7taan_T9,Li7taan_median,Li7taan_expsigma = np.loadtxt(dir_other_rates+"Li7taan.txt",unpack = True)
 # Li7He3 -> aanp
 alpha_Li7He3aanp,beta_Li7He3aanp,gamma_Li7He3aanp = 6.0875952*10**-20,-3.,-111.73068
-Li7He3aanp_T9,Li7He3aanp_median,Li7He3aanp_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7He3aanp.txt",unpack = True)
+Li7He3aanp_T9,Li7He3aanp_median,Li7He3aanp_expsigma = np.loadtxt(dir_other_rates+"Li7He3aanp.txt",unpack = True)
 # Li8d -> Li7t
 alpha_Li8dLi7t,beta_Li8dLi7t,gamma_Li8dLi7t = 1.2509926,0.,-49.02453
-Li8dLi7t_T9,Li8dLi7t_median,Li8dLi7t_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li8dLi7t.txt",unpack = True)
+Li8dLi7t_T9,Li8dLi7t_median,Li8dLi7t_expsigma = np.loadtxt(dir_other_rates+"Li8dLi7t.txt",unpack = True)
 # Be7t -> aanp
 alpha_Be7taanp,beta_Be7taanp,gamma_Be7taanp = 6.0898077*10**-20,-3.,-121.9483
-Be7taanp_T9,Be7taanp_median,Be7taanp_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7taanp.txt",unpack = True)
+Be7taanp_T9,Be7taanp_median,Be7taanp_expsigma = np.loadtxt(dir_other_rates+"Be7taanp.txt",unpack = True)
 # Be7He3 -> aapp
 alpha_Be7He3aapp,beta_Be7He3aapp,gamma_Be7He3aapp = 1.2201356*10**-19,-3.,-130.81131
-Be7He3aapp_T9,Be7He3aapp_median,Be7He3aapp_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Be7He3aapp.txt",unpack = True)
+Be7He3aapp_T9,Be7He3aapp_median,Be7He3aapp_expsigma = np.loadtxt(dir_other_rates+"Be7He3aapp.txt",unpack = True)
 # Li6n -> ta
 alpha_Li6nta,beta_Li6nta,gamma_Li6nta = 1.0691921,0.,-55.509875
-Li6nta_T9,Li6nta_median,Li6nta_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6nta.txt",unpack = True)
+Li6nta_T9,Li6nta_median,Li6nta_expsigma = np.loadtxt(dir_other_rates+"Li6nta.txt",unpack = True)
 # He3t -> Li6g
 alpha_He3tLi6g,beta_He3tLi6g,gamma_He3tLi6g = 2.4459918*10**10,1.5,-183.2835
-He3tLi6g_T9,He3tLi6g_median,He3tLi6g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"He3tLi6g.txt",unpack = True)
+He3tLi6g_T9,He3tLi6g_median,He3tLi6g_expsigma = np.loadtxt(dir_other_rates+"He3tLi6g.txt",unpack = True)
 # an -> pLi6g
 alpha_anpLi6g,beta_anpLi6g,gamma_anpLi6g = 7.2181753*10**19,3.,-42.917276
-anpLi6g_T9,anpLi6g_median,anpLi6g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"anpLi6g.txt",unpack = True)
+anpLi6g_T9,anpLi6g_median,anpLi6g_expsigma = np.loadtxt(dir_other_rates+"anpLi6g.txt",unpack = True)
 # Li6n -> Li7g
 alpha_Li6nLi7g,beta_Li6nLi7g,gamma_Li6nLi7g = 1.1903305*10**10,1.5,-84.145424
-Li6nLi7g_T9,Li6nLi7g_median,Li6nLi7g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6nLi7g.txt",unpack = True)
+Li6nLi7g_T9,Li6nLi7g_median,Li6nLi7g_expsigma = np.loadtxt(dir_other_rates+"Li6nLi7g.txt",unpack = True)
 # Li6d -> Li7p
 alpha_Li6dLi7p,beta_Li6dLi7p,gamma_Li6dLi7p = 2.5239503,0.,-58.330405
-Li6dLi7p_T9,Li6dLi7p_median,Li6dLi7p_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6dLi7p.txt",unpack = True)
+Li6dLi7p_T9,Li6dLi7p_median,Li6dLi7p_expsigma = np.loadtxt(dir_other_rates+"Li6dLi7p.txt",unpack = True)
 # Li6d -> Be7n
 alpha_Li6dBe7n,beta_Li6dBe7n,gamma_Li6dBe7n = 2.5185377,0.,-39.249773
-Li6dBe7n_T9,Li6dBe7n_median,Li6dBe7n_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li6dBe7n.txt",unpack = True)
+Li6dBe7n_T9,Li6dBe7n_median,Li6dBe7n_expsigma = np.loadtxt(dir_other_rates+"Li6dBe7n.txt",unpack = True)
 # Li7n -> Li8g
 alpha_Li7nLi8g,beta_Li7nLi8g,gamma_Li7nLi8g = 1.3081022*10**10,1.5,-23.587602
-Li7nLi8g_T9,Li7nLi8g_median,Li7nLi8g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7nLi8g.txt",unpack = True)
+Li7nLi8g_T9,Li7nLi8g_median,Li7nLi8g_expsigma = np.loadtxt(dir_other_rates+"Li7nLi8g.txt",unpack = True)
 # Li7d -> Li8p
 alpha_Li7dLi8p,beta_Li7dLi8p,gamma_Li7dLi8p = 2.7736709,0.,2.2274166
-Li7dLi8p_T9,Li7dLi8p_median,Li7dLi8p_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7dLi8p.txt",unpack = True)
+Li7dLi8p_T9,Li7dLi8p_median,Li7dLi8p_expsigma = np.loadtxt(dir_other_rates+"Li7dLi8p.txt",unpack = True)
 # Li8p -> aan
 alpha_Li8paan,beta_Li8paan,gamma_Li8paan = 3.5851946*10**-10,-1.5,-177.70722
-Li8paan_T9,Li8paan_median,Li8paan_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li8paan.txt",unpack = True)
+Li8paan_T9,Li8paan_median,Li8paan_expsigma = np.loadtxt(dir_other_rates+"Li8paan.txt",unpack = True)
 # an -> nHe6g
 alpha_annHe6g,beta_annHe6g,gamma_annHe6g = 1.0837999*10**20,3.,-11.319626
-annHe6g_T9,annHe6g_median,annHe6g_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"annHe6g.txt",unpack = True)
+annHe6g_T9,annHe6g_median,annHe6g_expsigma = np.loadtxt(dir_other_rates+"annHe6g.txt",unpack = True)
 # pp -> ndp
 alpha_ppndp,beta_ppndp,gamma_ppndp = 2.3580703*10**9,1.5,-25.815019
-ppndp_T9,ppndp_median,ppndp_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"ppndp.txt",unpack = True)
+ppndp_T9,ppndp_median,ppndp_expsigma = np.loadtxt(dir_other_rates+"ppndp.txt",unpack = True)
 # Li7t -> aann
 alpha_Li7taann,beta_Li7taann,gamma_Li7taann = 1.2153497*10**-19,-3.,-102.86767
-Li7taann_T9,Li7taann_median,Li7taann_expsigma = np.loadtxt(working_dir+"/PRyMrates/nuclear/other_nucl_rates/"+"Li7taann.txt",unpack = True)
+Li7taann_T9,Li7taann_median,Li7taann_expsigma = np.loadtxt(dir_other_rates+"Li7taann.txt",unpack = True)
