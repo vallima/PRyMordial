@@ -618,4 +618,4 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
     He3oHx1e5 = (Yt_f+YHe3_f)/Yp_f*1e+5 # includes decay of tritium
     # Primordial lythium-7 abundance as relative number density to hydrogen x 10^10
     Li7oHx1e10 = (YLi7_f+YBe7_f)/Yp_f*1e+10 # includes decay of beryllium-7
-    return np.array([Neff_f,Omeganurel_f,OneOverOmeganunr_f,YP_f,YPCMB_f,DoHx1e5,He3oHx1e5,Li7oHx1e10])
+    return np.array([Neff_f,Omeganurel_f,OneOverOmeganunr_f,YPCMB_f,YP_f,DoHx1e5,He3oHx1e5,Li7oHx1e10])
