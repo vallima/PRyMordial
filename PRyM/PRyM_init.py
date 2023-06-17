@@ -142,7 +142,7 @@ kappa_p = 2.79284734463-1. # anomalous magnetic moment of the proton, PDG
 kappa_n = -1.91304273 # anomalous magnetic moment of the neutron, PDG
 deltakappa = kappa_p-kappa_n # weak magnetism constant, arXiv:1212.0332
 radproton = 0.8409*1.e-13*cm # proton charge radius in [cm], PDG
-tau_n = 879.6*second # neutron lifetime in [s], PDG w/ 8 best measurements
+tau_n = 878.4*second # neutron lifetime [s], PDG 23 w/ 8 best measurements
 Vud = 0.9738 # UTfit prediction, table I in 2212.03894
 
 #######################
