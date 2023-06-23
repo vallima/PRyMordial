@@ -22,18 +22,18 @@ class UpdateNuclearRates(object):
         Be7nLi7p_mu = PRyMini.Be7nLi7p_median*np.exp(p_Be7nLi7p*np.log(PRyMini.Be7nLi7p_expsigma))
         Li7paa_mu = PRyMini.Li7paa_median*np.exp(p_Li7paa*np.log(PRyMini.Li7paa_expsigma))
         if(PRyMini.NP_nuclear_flag):
-            npdg_mu += PRyMini.delta_npdg*PRyMini.npdg_median
-            dpHe3g_mu += PRyMini.delta_dpHe3g*PRyMini.dpHe3g_median
-            ddHe3n_mu += PRyMini.delta_ddHe3n*PRyMini.ddHe3n_median
-            ddtp_mu += PRyMini.delta_ddtp*PRyMini.ddtp_median
-            tpag_mu += PRyMini.delta_tpag*PRyMini.tpag_median
-            tdan_mu += PRyMini.delta_tdan*PRyMini.tdan_median
-            taLi7g_mu += PRyMini.delta_taLi7g*PRyMini.taLi7g_median
-            He3ntp_mu += PRyMini.delta_He3ntp*PRyMini.He3ntp_median
-            He3dap_mu += PRyMini.delta_He3dap*PRyMini.He3dap_median
-            He3aBe7g_mu += PRyMini.delta_He3aBe7g*PRyMini.He3aBe7g_median
-            Be7nLi7p_mu += PRyMini.delta_Be7nLi7p*PRyMini.Be7nLi7p_median
-            Li7paa_mu += PRyMini.delta_Li7paa*PRyMini.Li7paa_median
+            npdg_mu += PRyMini.NP_delta_npdg*PRyMini.npdg_median
+            dpHe3g_mu += PRyMini.NP_delta_dpHe3g*PRyMini.dpHe3g_median
+            ddHe3n_mu += PRyMini.NP_delta_ddHe3n*PRyMini.ddHe3n_median
+            ddtp_mu += PRyMini.NP_delta_ddtp*PRyMini.ddtp_median
+            tpag_mu += PRyMini.NP_delta_tpag*PRyMini.tpag_median
+            tdan_mu += PRyMini.NP_delta_tdan*PRyMini.tdan_median
+            taLi7g_mu += PRyMini.NP_delta_taLi7g*PRyMini.taLi7g_median
+            He3ntp_mu += PRyMini.NP_delta_He3ntp*PRyMini.He3ntp_median
+            He3dap_mu += PRyMini.NP_delta_He3dap*PRyMini.He3dap_median
+            He3aBe7g_mu += PRyMini.NP_delta_He3aBe7g*PRyMini.He3aBe7g_median
+            Be7nLi7p_mu += PRyMini.NP_delta_Be7nLi7p*PRyMini.Be7nLi7p_median
+            Li7paa_mu += PRyMini.NP_delta_Li7paa*PRyMini.Li7paa_median
         self.npdg_spline = interp1d(PRyMini.npdg_T9,npdg_mu,bounds_error=False,fill_value="extrapolate",kind='linear')
         self.dpHe3g_spline = interp1d(PRyMini.dpHe3g_T9,dpHe3g_mu,bounds_error=False,fill_value="extrapolate",kind='linear')
         self.ddHe3n_spline = interp1d(PRyMini.ddHe3n_T9,ddHe3n_mu,bounds_error=False,fill_value="extrapolate",kind='linear')
