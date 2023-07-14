@@ -96,7 +96,11 @@ def p_e(Tg):
 ####################
 # Neutrino energy density
 def rho_nu(Tnu):
-    return 2.*(7./8.)*(np.pi**2)/30.*Tnu**4
+    # SM contribution per flavor
+    rho_nu_SM = 2.*(7./8.)*(np.pi**2)/30.*Tnu**4
+    # extra contribution per flavor
+    rho_nu_extra = PRyMini.DeltaNeff/3.*rho_nu_SM
+    return rho_nu_SM + rho_nu_extra
 # drho_nu/dT
 def drho_nu_dT(Tnu):
     return 4.*rho_nu(Tnu)/Tnu

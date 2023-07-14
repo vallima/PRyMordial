@@ -168,8 +168,8 @@ Omegabh2 = 0.02230 # baryon abundance by Planck [A.A. 652 (2021)] (no BBN prior)
 Omegabh2_to_eta0b = (rhocOverh2/n0CMB)/(ma/maOvermB)
 eta0b = Omegabh2_to_eta0b*Omegabh2 # baryon-to-photon ratio
 munuOverTnu = 0. # neutrino chemical potential in units of neutrino temperature
-normDeltaNeff = (7./8.)*(4./11.)**(4./3.) # normalization of extra radiation as neutrino
-DeltaNeff = 0. # extra relativistic degrees of freedom in the total energy density
+# extra-relativistic degrees of freedom as a shift of neutrino total energy density
+DeltaNeff = 0. # must be > -3 to not entirely eat up the SM neutrino contribution
 
 ###############################
 # Compilation from NUBASE2020 #

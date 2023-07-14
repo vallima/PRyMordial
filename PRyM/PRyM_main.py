@@ -49,8 +49,6 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
         rho_pl = PRyMthermo.rho_g(Tg)+PRyMthermo.rho_e(Tg)-PRyMthermo.PofT(Tg)+Tg*PRyMthermo.dPdT(Tg)
         rho_3nu = PRyMthermo.rho_nu(Tnue)+2.*PRyMthermo.rho_nu(Tnumu)
         rho_tot = rho_pl+rho_3nu
-        # Extra radiation density due to Delta Neff
-        rho_tot += PRyMini.normDeltaNeff*PRyMini.DeltaNeff*PRyMthermo.rho_g(Tg)
         if(PRyMini.NP_thermo_flag):
             rho_tot += PRyMthermo.rho_NP(T_NP)
         if(PRyMini.NP_nu_flag):
@@ -176,7 +174,6 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
     def N_eff(Tg,Tnue,Tnumu,T_NP=0.):
         rho_gamma = PRyMthermo.rho_g(Tg)
         rho_rad_tot = PRyMthermo.rho_nu(Tnue)+2.*PRyMthermo.rho_nu(Tnumu)+rho_gamma
-        rho_rad_tot += PRyMini.normDeltaNeff*PRyMini.DeltaNeff*PRyMthermo.rho_g(Tg)
         if(PRyMini.NP_thermo_flag):
             rho_rad_tot += PRyMthermo.rho_NP(T_NP)
         elif(PRyMini.NP_nu_flag):
