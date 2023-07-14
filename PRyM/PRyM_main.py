@@ -180,7 +180,9 @@ def PRyMresults(my_rho_NP=0.,my_p_NP=0.,my_drho_NP_dT=0.,my_delta_rho_NP=0.):
             rho_rad_tot += PRyMthermo.rho_NP(Tnue)
         elif(PRyMini.NP_e_flag):
             rho_rad_tot += PRyMthermo.rho_NP(Tg)
-        return (rho_rad_tot-rho_gamma)/rho_gamma/PRyMini.normDeltaNeff
+        # normalization of extra radiation as neutrinos
+        normDeltaNeff = (7./8.)*(4./11.)**(4./3.)
+        return (rho_rad_tot-rho_gamma)/rho_gamma/normDeltaNeff
         
     ################################
     # Relic abundance of neutrinos #
