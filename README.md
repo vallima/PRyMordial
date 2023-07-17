@@ -31,6 +31,6 @@ See doc/COPYING and doc/LICENSE for licensing terms.
 
 Documentation:
 --------------
-See the upcoming paper!
+See [PRyMordial paper](https://arxiv.org/abs/2307.07061)!
 
 
