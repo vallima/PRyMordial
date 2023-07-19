@@ -4,6 +4,10 @@ A Python package for precise computations of BBN within and beyond the Standard 
 
 [PRyM in a Nutshell](https://github.com/vallima/PRyMordial/files/11711841/PRyM.pdf)
 
+To run a quick example, open the terminal and once in PRyMordial folder just type: 
+
+python runPRyM_julia.py
+
 Dependencies:
 -------------
 - NumPy (mandatory) – pip install numpy
