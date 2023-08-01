@@ -22,7 +22,7 @@ PRyMini.smallnet_flag = True
 PRyMini.julia_flag = False
 start_time = time.time()
 import PRyM.PRyM_main as PRyMmain
-res = PRyMmain.PRyMresults()
+res = PRyMmain.PRyMclass().PRyMresults()
 print(" ")
 print(" Neff --> ",res[0])
 print(" Ωνh2 x 10^6 (rel) --> ",res[1])
@@ -43,7 +43,7 @@ PRyMini.smallnet_flag = False
 PRyMini.julia_flag = False
 start_time = time.time()
 import PRyM.PRyM_main as PRyMmain
-res = PRyMmain.PRyMresults()
+res = PRyMmain.PRyMclass().PRyMresults()
 print(" ")
 print(" Neff --> ",res[0])
 print(" Ωνh2 x 10^6 (rel) --> ",res[1])
@@ -72,7 +72,7 @@ if(julia_packages_flag):
     PRyMini.smallnet_flag = True
     PRyMini.julia_flag = True
     import PRyM.PRyM_main as PRyMmain
-    res = PRyMmain.PRyMresults()
+    res = PRyMmain.PRyMclass().PRyMresults()
 
     print(" ")
     print(" ################################################")
@@ -82,7 +82,7 @@ if(julia_packages_flag):
     PRyMini.julia_flag = True
     start_time = time.time()
     import PRyM.PRyM_main as PRyMmain
-    res = PRyMmain.PRyMresults()
+    res = PRyMmain.PRyMclass().PRyMresults()
     print(" ")
     print(" Neff --> ",res[0])
     print(" Ωνh2 x 10^6 (rel) --> ",res[1])
@@ -102,7 +102,7 @@ if(julia_packages_flag):
     PRyMini.smallnet_flag = False
     PRyMini.julia_flag = True
     import PRyM.PRyM_main as PRyMmain
-    res = PRyMmain.PRyMresults()
+    res = PRyMmain.PRyMclass().PRyMresults()
 
     print(" ")
     print(" ################################################")
@@ -112,7 +112,7 @@ if(julia_packages_flag):
     PRyMini.julia_flag = True
     start_time = time.time()
     import PRyM.PRyM_main as PRyMmain
-    res = PRyMmain.PRyMresults()
+    res = PRyMmain.PRyMclass().PRyMresults()
     print(" ")
     print(" Neff --> ",res[0])
     print(" Ωνh2 x 10^6 (rel) --> ",res[1])
