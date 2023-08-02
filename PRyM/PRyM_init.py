@@ -68,9 +68,8 @@ compute_bckg_flag = True
 save_bckg_flag = False
 # Set flag to True for some new species with temperature T_NP
 NP_thermo_flag = False
-if(NP_thermo_flag):
-    # Set the initial temperature of the NP species via relation TNP_start = xi_NP*T_start
-    xi_NP = 1.
+# Set the initial temperature of the NP species via relation TNP_start = xi_NP*T_start
+xi_NP = 1.
 # Set flag to True for new species in thermal equilibrium with neutrinos
 NP_nu_flag = False
 # Set flag to True for new species in thermal equilibrium with plasma, i.e. photons and e+-
@@ -96,9 +95,8 @@ save_nTOp_flag = False
 save_nTOp_thermal_flag = False
 # Set flag to True for NP modification of weak rates in units of standard n <--> p Born rates
 NP_nTOp_flag = False
-if(NP_nTOp_flag):
-    # % shift in terms of Born rates
-    NP_delta_nTOp = 0.
+# % shift in terms of Born rates
+NP_delta_nTOp = 0.
 
 ###########################
 # Flags for nuclear rates #
@@ -182,18 +180,10 @@ NuclExcessMass = {"n":8071.3171,"p":7288.9706,"d":13135.722,"t":14949.81,"He3":1
 NuclSpin = {"n":1./2.,"p":1./2.,"d":1.,"t": 1./2.,"He3":1./2.,"a":0.,"He6":0.,"Li6":1.,"Li7":3./2.,"Be7":3./2.,"Li8":2.,"Be8":0.,"B8":2.}
 
 # Initialization of weights for an MCMC analysis such that median value are adopted for the nuclear rates
-if(smallnet_flag):
-    num_reactions = 12
-    p_npdg,p_dpHe3g,p_ddHe3n,p_ddtp,p_tpag,p_tdan,p_taLi7g,p_He3ntp,p_He3dap,p_He3aBe7g,p_Be7nLi7p,p_Li7paa = np.zeros(num_reactions)
-    if(NP_nuclear_flag):
-        # % shift in terms of median value of the key nuclear rates
-        NP_delta_npdg,NP_delta_dpHe3g,NP_delta_ddHe3n,NP_delta_ddtp,NP_delta_tpag,NP_delta_tdan,NP_delta_taLi7g,NP_delta_He3ntp,NP_delta_He3dap,NP_delta_He3aBe7g, NP_delta_Be7nLi7p,NP_delta_Li7paa = np.zeros(num_reactions)
-else:
-    num_reactions = 63
-    p_npdg,p_dpHe3g,p_ddHe3n,p_ddtp,p_tpag,p_tdan,p_taLi7g,p_He3ntp,p_He3dap,p_He3aBe7g,p_Be7nLi7p,p_Li7paa,p_Li7paag,p_Be7naa,p_Be7daap, p_daLi6g,p_Li6pBe7g,p_Li6pHe3a, p_B8naap, p_Li6He3aap, p_Li6taan, p_Li6tLi8p, p_Li7He3Li6a, p_Li8He3Li7a, p_Be7tLi6a, p_B8tBe7a, p_B8nLi6He3, p_B8nBe7d, p_Li6tLi7d, p_Li6He3Be7d, p_Li7He3aad, p_Li8He3aat, p_Be7taad, p_Be7tLi7He3, p_B8dBe7He3, p_B8taaHe3, p_Be7He3ppaa, p_ddag, p_He3He3app, p_Be7pB8g, p_Li7daan, p_dntg, p_ttann, p_He3nag, p_He3tad, p_He3tanp, p_Li7taan, p_Li7He3aanp, p_Li8dLi7t, p_Be7taanp, p_Be7He3aapp, p_Li6nta, p_He3tLi6g, p_anpLi6g, p_Li6nLi7g, p_Li6dLi7p, p_Li6dBe7n, p_Li7nLi8g, p_Li7dLi8p, p_Li8paan, p_annHe6g, p_ppndp, p_Li7taann = np.zeros(num_reactions)
-    if(NP_nuclear_flag):
-        # % shift in terms of median value of all nuclear rates implemented
-        NP_delta_npdg,NP_delta_dpHe3g,NP_delta_ddHe3n,NP_delta_ddtp,NP_delta_tpag,NP_delta_tdan,NP_delta_taLi7g,NP_delta_He3ntp,NP_delta_He3dap,NP_delta_He3aBe7g, NP_delta_Be7nLi7p,NP_delta_Li7paa,NP_delta_Li7paag,NP_delta_Be7naa,NP_delta_Be7daap, NP_delta_daLi6g,NP_delta_Li6pBe7g,NP_delta_Li6pHe3a, NP_delta_B8naap, NP_delta_Li6He3aap, NP_delta_Li6taan, NP_delta_Li6tLi8p, NP_delta_Li7He3Li6a, NP_delta_Li8He3Li7a, NP_delta_Be7tLi6a, NP_delta_B8tBe7a, NP_delta_B8nLi6He3, NP_delta_B8nBe7d, NP_delta_Li6tLi7d, NP_delta_Li6He3Be7d, NP_delta_Li7He3aad, NP_delta_Li8He3aat, NP_delta_Be7taad, NP_delta_Be7tLi7He3, NP_delta_B8dBe7He3, NP_delta_B8taaHe3, NP_delta_Be7He3ppaa, NP_delta_ddag, NP_delta_He3He3app, NP_delta_Be7pB8g, NP_delta_Li7daan, NP_delta_dntg, NP_delta_ttann, NP_delta_He3nag, NP_delta_He3tad, NP_delta_He3tanp, NP_delta_Li7taan, NP_delta_Li7He3aanp, NP_delta_Li8dLi7t, NP_delta_Be7taanp, NP_delta_Be7He3aapp, NP_delta_Li6nta, NP_delta_He3tLi6g, NP_delta_anpLi6g, NP_delta_Li6nLi7g, NP_delta_Li6dLi7p, NP_delta_Li6dBe7n, NP_delta_Li7nLi8g, NP_delta_Li7dLi8p, NP_delta_Li8paan, NP_delta_annHe6g, NP_delta_ppndp, NP_delta_Li7taann = np.zeros(num_reactions)
+num_reactions = 63
+p_npdg,p_dpHe3g,p_ddHe3n,p_ddtp,p_tpag,p_tdan,p_taLi7g,p_He3ntp,p_He3dap,p_He3aBe7g,p_Be7nLi7p,p_Li7paa,p_Li7paag,p_Be7naa,p_Be7daap, p_daLi6g,p_Li6pBe7g,p_Li6pHe3a, p_B8naap, p_Li6He3aap, p_Li6taan, p_Li6tLi8p, p_Li7He3Li6a, p_Li8He3Li7a, p_Be7tLi6a, p_B8tBe7a, p_B8nLi6He3, p_B8nBe7d, p_Li6tLi7d, p_Li6He3Be7d, p_Li7He3aad, p_Li8He3aat, p_Be7taad, p_Be7tLi7He3, p_B8dBe7He3, p_B8taaHe3, p_Be7He3ppaa, p_ddag, p_He3He3app, p_Be7pB8g, p_Li7daan, p_dntg, p_ttann, p_He3nag, p_He3tad, p_He3tanp, p_Li7taan, p_Li7He3aanp, p_Li8dLi7t, p_Be7taanp, p_Be7He3aapp, p_Li6nta, p_He3tLi6g, p_anpLi6g, p_Li6nLi7g, p_Li6dLi7p, p_Li6dBe7n, p_Li7nLi8g, p_Li7dLi8p, p_Li8paan, p_annHe6g, p_ppndp, p_Li7taann = np.zeros(num_reactions)
+# % shift in terms of median value of all nuclear rates implemented
+NP_delta_npdg,NP_delta_dpHe3g,NP_delta_ddHe3n,NP_delta_ddtp,NP_delta_tpag,NP_delta_tdan,NP_delta_taLi7g,NP_delta_He3ntp,NP_delta_He3dap,NP_delta_He3aBe7g, NP_delta_Be7nLi7p,NP_delta_Li7paa,NP_delta_Li7paag,NP_delta_Be7naa,NP_delta_Be7daap, NP_delta_daLi6g,NP_delta_Li6pBe7g,NP_delta_Li6pHe3a, NP_delta_B8naap, NP_delta_Li6He3aap, NP_delta_Li6taan, NP_delta_Li6tLi8p, NP_delta_Li7He3Li6a, NP_delta_Li8He3Li7a, NP_delta_Be7tLi6a, NP_delta_B8tBe7a, NP_delta_B8nLi6He3, NP_delta_B8nBe7d, NP_delta_Li6tLi7d, NP_delta_Li6He3Be7d, NP_delta_Li7He3aad, NP_delta_Li8He3aat, NP_delta_Be7taad, NP_delta_Be7tLi7He3, NP_delta_B8dBe7He3, NP_delta_B8taaHe3, NP_delta_Be7He3ppaa, NP_delta_ddag, NP_delta_He3He3app, NP_delta_Be7pB8g, NP_delta_Li7daan, NP_delta_dntg, NP_delta_ttann, NP_delta_He3nag, NP_delta_He3tad, NP_delta_He3tanp, NP_delta_Li7taan, NP_delta_Li7He3aanp, NP_delta_Li8dLi7t, NP_delta_Be7taanp, NP_delta_Be7He3aapp, NP_delta_Li6nta, NP_delta_He3tLi6g, NP_delta_anpLi6g, NP_delta_Li6nLi7g, NP_delta_Li6dLi7p, NP_delta_Li6dBe7n, NP_delta_Li7nLi8g, NP_delta_Li7dLi8p, NP_delta_Li8paan, NP_delta_annHe6g, NP_delta_ppndp, NP_delta_Li7taann = np.zeros(num_reactions)
 
 #################
 # Nuclear rates #
