@@ -8,6 +8,11 @@ To run a quick example, open the terminal and once in PRyMordial folder just typ
 
 python runPRyM_julia.py
 
+Examples on the usage of PRyMordial are provided in the Jupyter notebooks PRyMdemoSM and PRyMdemoNP.
+
+A dedicated numerical table for standard cosmological analyses involving BBN likelihoods is also in the repo.
+For more details, see PRyM_Yp_DH_cosmoMC_2023.dat
+
 Dependencies:
 -------------
 - NumPy (mandatory) – pip install numpy
